@@ -41,9 +41,7 @@ public class CarController {
                     .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(errors);
         }
-        /*if (StringUtils.isAllBlank(authorization)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
-        }*/
+
         // Verificar se o e-mail já existe
         if (service.existsByLicensePlate(car.getLicensePlate())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("License plate already exists");

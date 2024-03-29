@@ -6,8 +6,14 @@ import com.app.sistema.repository.UserRepository;
 import com.app.sistema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,7 +23,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
+    private final MessageSource messageSource;
 
+    private String getMessage(String messageCode, Object... args) {
+        return messageSource.getMessage(messageCode, args, LocaleContextHolder.getLocale());
+    }
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -28,6 +39,8 @@ public class UserServiceImpl implements UserService {
         for (Car car : user.getCars()) {
             car.setUser(user);
         }
+        user.setCreatedAt(LocalDateTime.now());
+
         return userRepository.save(user);
     }
 
@@ -57,6 +70,7 @@ public class UserServiceImpl implements UserService {
             user.setLogin(updatedUser.getLogin());
             user.setPassword(updatedUser.getPassword());
             user.setPhone(updatedUser.getPhone());
+            user.setLastLogin(LocalDateTime.now());
             return userRepository.save(user);
         }
         return null;
@@ -65,5 +79,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByLogin(String login) {
         return userRepository.existsByLogin(login);
+    }
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) {
+                return userRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException(getMessage("message.user.error")));
+            }
+        };
     }
 }

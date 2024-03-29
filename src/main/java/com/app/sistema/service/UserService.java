@@ -1,6 +1,7 @@
 package com.app.sistema.service;
 
 import com.app.sistema.model.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     boolean existsByLogin(String login);
+    UserDetailsService userDetailsService();
 }
