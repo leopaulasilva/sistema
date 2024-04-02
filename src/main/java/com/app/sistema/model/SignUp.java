@@ -22,4 +22,6 @@ public class SignUp {
     private String email;
     @NotEmpty(message = "Password cannot be empty")
     private String password;
+    @NotEmpty(message = "Login cannot be empty")
+    private String login;
 }

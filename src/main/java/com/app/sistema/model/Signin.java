@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Signin {
-    @NotEmpty(message = "Email is required")
-    private String email;
+    @NotEmpty(message = "Login is required")
+    private String login;
     @NotEmpty(message = "Password cannot be empty")
     private String password;
 }

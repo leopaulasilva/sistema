@@ -39,6 +39,7 @@ public class User implements UserDetails {
     @NotEmpty(message = "Password cannot be empty")
     private String password;
     private Date birthday;
+    @NotEmpty(message = "Login cannot be empty")
     private String login;
     private String phone;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -7,6 +7,7 @@ import com.app.sistema.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,15 @@ public class AuthenticationController {
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(errors);
+        }
+        // Verificar se o e-mail já existe
+        if (authenticationService.existsByEmail(request.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
+        }
+
+        // Verificar se o login já existe
+        if (authenticationService.existsByLogin(request.getLogin())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login already exists");
         }
         return ResponseEntity.ok(authenticationService.signup(request));
     }

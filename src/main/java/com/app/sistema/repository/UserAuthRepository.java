@@ -7,5 +7,9 @@ import java.util.Optional;
 
 public interface UserAuthRepository extends JpaRepository<User, Integer> {
     // Since email is unique, we'll find users by email
-    Optional<User> findByEmail(String email);
+    Optional<User> findByLogin(String login);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByLogin(String login);
 }

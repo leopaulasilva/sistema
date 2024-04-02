@@ -43,6 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
+                .login(request.getLogin())
                 .createdAt(LocalDateTime.now())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER).build();
@@ -54,13 +55,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public JwtAuthentication signin(Signin request) {
+        var user = userRepository.findByLogin(request.getLogin())
+                .orElseThrow(() -> new IllegalArgumentException(getMessage("message.login.error")));
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException(getMessage("message.email.error")));
+                new UsernamePasswordAuthenticationToken(user.getEmail(), request.getPassword()));
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);
         var jwt = jwtService.generateToken(user);
         return JwtAuthentication.builder().token(jwt).build();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByLogin(String login) {
+        return userRepository.existsByLogin(login);
     }
 }

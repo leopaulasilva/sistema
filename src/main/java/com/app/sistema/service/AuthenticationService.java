@@ -9,4 +9,8 @@ public interface AuthenticationService {
     JwtAuthentication signup(SignUp request);
 
     JwtAuthentication signin(Signin request);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByLogin(String login);
 }
