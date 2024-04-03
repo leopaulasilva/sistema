@@ -1,5 +1,6 @@
 package com.app.sistema.service.impl;
 
+import com.app.sistema.enums.Role;
 import com.app.sistema.model.Car;
 import com.app.sistema.model.User;
 import com.app.sistema.repository.UserRepository;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
         for (Car car : user.getCars()) {
             car.setUser(user);
         }
+        user.setRole(Role.USER);
         user.setCreatedAt(LocalDateTime.now());
 
         return userRepository.save(user);
