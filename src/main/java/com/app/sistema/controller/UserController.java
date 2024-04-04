@@ -70,12 +70,15 @@ public class UserController {
             return ResponseEntity.badRequest().body(errors);
         }
         // Verificar se o e-mail já existe
-        if (service.existsByEmail(updatedUser.getEmail())) {
+        User user = service.getUserById(updatedUser.getId());
+
+        // Verificar se o email foi alterado e se já existe
+        if (!updatedUser.getEmail().equals(user.getEmail()) && service.existsByEmail(updatedUser.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
         }
 
-        // Verificar se o login já existe
-        if (service.existsByLogin(updatedUser.getLogin())) {
+        // Verificar se o login foi alterado e se já existe
+        if (!updatedUser.getLogin().equals(user.getLogin()) && service.existsByLogin(updatedUser.getLogin())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Login already exists");
         }
         return ResponseEntity.ok(service.updateUserById(id,updatedUser));

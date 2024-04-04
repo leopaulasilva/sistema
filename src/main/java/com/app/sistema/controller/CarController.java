@@ -48,8 +48,8 @@ public class CarController {
         }
 
 
-            Car createdCar = service.createCar(car);
-            return ResponseEntity.ok(createdCar);
+        Car createdCar = service.createCar(car);
+        return ResponseEntity.ok(createdCar);
 
     }
 
@@ -58,13 +58,30 @@ public class CarController {
         return ResponseEntity.ok(service.getCarById(id));
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getCarByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getCarByUserId(id));
+    }
+
     @DeleteMapping("/{id}")
     public void deleteCarById(@PathVariable Long id) {
         service.deleteCarById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCarById(@PathVariable Long id, @RequestBody Car updatedCar) {
+    public ResponseEntity<?> updateCarById(@PathVariable Long id, @RequestBody Car updatedCar, BindingResult result) {
+        if (result.hasErrors()) {
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
+
+        // Verificar se o e-mail já existe
+        if (service.existsByLicensePlate(updatedCar.getLicensePlate())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("License plate already exists");
+        }
+
         return ResponseEntity.ok(service.updateCarById(id,updatedCar));
     }
 

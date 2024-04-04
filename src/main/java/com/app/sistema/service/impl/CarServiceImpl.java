@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
@@ -59,5 +61,17 @@ public class CarServiceImpl implements CarService {
     @Override
     public boolean existsByLicensePlate(String licensePlate) {
         return repository.existsByLicensePlate(licensePlate);
+    }
+
+    @Override
+    public List<Car> getCarByUserId(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return repository.findByUser(user);
+        } else {
+            return null; // Retorna null se o usuário não for encontrado
+        }
     }
 }
