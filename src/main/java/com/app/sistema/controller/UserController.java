@@ -36,7 +36,7 @@ public class UserController {
             List<String> errors = result.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
         // Verificar se o e-mail já existe
         if (service.existsByEmail(user.getEmail())) {
