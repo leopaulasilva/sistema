@@ -259,6 +259,8 @@ A segurança da aplicação é garantida com o uso de Spring Security e JWT. Os 
 
 **Endpoints**
 
+
+
 //
 **Registra um novo usuário.**
 
@@ -380,6 +382,12 @@ Respostas
 * 404 NOT FOUND: Se o usuário não puder ser encontrado para as operações de recuperação, exclusão ou atualização.
 * 
 
+
+**Teste a API no postman importando o arquivo postman_collection.json**
+
+
+Caminho
+- `sistema/src/main/resources/json-test/API Documentation AWS.postman_collection.json`
 
 **Defesa Técnica:** 
 
